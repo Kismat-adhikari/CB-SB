@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Sharing Feed</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #1c1c1c;
+            color: #f7c6c6;
+            padding: 20px;
+        }
+
+        .feed-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .post {
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        .post:hover {
+            background-color: #383838;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid #f46464;
+        }
+
+        .user-info h4 {
+            margin: 0;
+            color: #f7c6c6;
+        }
+
+        .user-info p {
+            font-size: 12px;
+            color: #a9a9a9;
+        }
+
+        .post-content p {
+            font-size: 16px;
+            color: #f7c6c6;
+        }
+
+        .post-image {
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+
+        .tags {
+            margin-top: 10px;
+        }
+
+        /* Tag styles (pill-style tags) */
+        .tag {
+            display: inline-block;
+            background-color: #2a2a2a;
+            color: #f46464;
+            border: 1px solid #f46464;
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 14px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        /* Hashtag styles (container + # inside) */
+        .hashtag {
+            display: inline-block;
+            background-color: #2a2a2a;
+            color: #f46464;
+            border: 1px solid #f46464;
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 14px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .hashtag::before {
+            content: '#';
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="feed-container">
+        <!-- Post 1 -->
+        <div class="post" onclick="location.href='post-details.html'">
+            <div class="post-header">
+                <img src="/static/images/avatar.png" alt="User Avatar" class="avatar">
+                <div class="user-info">
+                    <h4>John Doe</h4>
+                    <p>2 hours ago</p>
+                </div>
+            </div>
+            <div class="post-content">
+                <p>Just made a delicious homemade pizza with fresh ingredients! 🍕🍅</p>
+                <img src="https://picsum.photos/600/400?random=3" alt="Homemade Pizza" class="post-image">
+                <!-- Tags for Post 1 -->
+                <div class="tags">
+                    <span class="tag">Pizza</span> <!-- Tag -->
+                    <span class="tag">Homemade</span> <!-- Tag -->
+                    <span class="hashtag">Vegetarian</span> <!-- Hashtag -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Post 2 -->
+        <div class="post" onclick="location.href='post-details.html'">
+            <div class="post-header">
+                <img src="/static/images/avatar.png" alt="User Avatar" class="avatar">
+                <div class="user-info">
+                    <h4>Jane Smith</h4>
+                    <p>5 hours ago</p>
+                </div>
+            </div>
+            <div class="post-content">
+                <p>Check out my new chocolate cake recipe! 🍫🍰</p>
+                <img src="https://picsum.photos/600/400?random=4" alt="Chocolate Cake" class="post-image">
+                <!-- Tags for Post 2 -->
+                <div class="tags">
+                    <span class="hashtag">Dessert</span> <!-- Hashtag -->
+                    <span class="tag">Chocolate</span> <!-- Tag -->
+                    <span class="tag">Baking</span> <!-- Tag -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Post 3 -->
+        <div class="post" onclick="location.href='post-details.html'">
+            <div class="post-header">
+                <img src="/static/images/avatar.png" alt="User Avatar" class="avatar">
+                <div class="user-info">
+                    <h4>Michael Brown</h4>
+                    <p>1 day ago</p>
+                </div>
+            </div>
+            <div class="post-content">
+                <p>Just tried a new pasta recipe! It’s so easy and tasty 🍝✨</p>
+                <img src="https://picsum.photos/600/400?random=5" alt="Pasta Dish" class="post-image">
+                <!-- Tags for Post 3 -->
+                <div class="tags">
+                    <span class="tag">Pasta</span> <!-- Tag -->
+                    <span class="hashtag">EasyRecipe</span> <!-- Hashtag -->
+                    <span class="hashtag">Italian</span> <!-- Hashtag -->
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

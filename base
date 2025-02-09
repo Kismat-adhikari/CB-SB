@@ -1,0 +1,17 @@
+PASA/
+├── instance/
+│   └── user.txt
+├── static/
+│   ├── css/
+│   │   ├── index.css
+│   │   ├── menu.css
+│   │   ├── navbar.css
+│   │   └── style.css
+│   ├── images/
+│   │   └── avatar.png
+│   ├── js/
+│   │   ├── main.js
+│   │   ├── menu.js
+│   │   └── navbar.js
+├── templates/
+└── requirements.txt

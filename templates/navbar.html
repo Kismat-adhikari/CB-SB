@@ -1,0 +1,113 @@
+<!-- navbar.html -->
+<link rel="stylesheet" href="/static/css/navbar.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<nav class="navbar">
+    <a href="/" class="logo">
+        <span class="letter-c">C</span>
+        <span class="letter-b">B</span>
+    </a>
+    
+    <button class="hamburger">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="nav-links">
+        <a href="/" class="nav-link">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="/friends" class="nav-link">
+            <i class="fas fa-user-friends"></i>
+        </a>
+        <a href="/menu" class="nav-link">
+            <i class="fas fa-utensils"></i>
+        </a>
+        <a href="/profile" class="nav-link">
+            <i class="fas fa-user"></i>
+        </a>
+        
+        <!-- Notification Icon with Dropdown -->
+        <div class="notification-container">
+            <a href="/notifications" class="nav-link notification-icon">
+                <i class="fas fa-bell"></i>
+                <span class="notification-count" style="display: none;">0</span>
+            </a>
+            <div class="notification-dropdown">
+                <div class="notification-list">
+                    <!-- Notifications will be inserted here -->
+                </div>
+                <a href="/notifications" class="view-all-notifications">View All Notifications</a>
+            </div>
+        </div>
+        
+        <!-- Logout Form -->
+        <form action="{{ url_for('logout') }}" method="POST" style="display:inline;">
+            <button type="submit" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </form>
+    </div>
+</nav>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const notificationContainer = document.querySelector(".notification-container");
+    const notificationDropdown = document.querySelector(".notification-dropdown");
+    const notificationList = document.querySelector(".notification-list");
+    const notificationCount = document.querySelector(".notification-count");
+
+    // Function to fetch and update notifications
+    function updateNotifications() {
+        fetch('/api/notifications')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const notifications = data.notifications;
+                    notificationList.innerHTML = ''; // Clear existing notifications
+
+                    if (notifications.length > 0) {
+                        notifications.forEach(notif => {
+                            const notifElement = document.createElement('div');
+                            notifElement.className = 'notification-item';
+                            notifElement.textContent = notif.message;
+                            notificationList.appendChild(notifElement);
+                        });
+
+                        // Update notification count with unread notifications only
+                        notificationCount.textContent = notifications.length;
+                        notificationCount.style.display = 'inline';
+                    } else {
+                        notificationList.innerHTML = '<p class="no-notifications">No new notifications</p>';
+                        notificationCount.style.display = 'none';
+                    }
+                }
+            })
+            .catch(error => console.error('Error fetching notifications:', error));
+    }
+
+    // Show dropdown on hover for desktop
+    if (window.innerWidth > 768) {
+        notificationContainer.addEventListener("mouseenter", function () {
+            notificationDropdown.classList.add("show");
+            updateNotifications();
+        });
+
+        notificationContainer.addEventListener("mouseleave", function () {
+            notificationDropdown.classList.remove("show");
+        });
+    }
+
+    // Update notifications periodically (every 30 seconds)
+    updateNotifications(); // Initial update
+    setInterval(updateNotifications, 30000);
+
+    // Add socket.io listener for real-time notifications
+    socket.on('notification_update', function(data) {
+        if (data.username === currentUsername) {
+            updateNotifications();
+        }
+    });
+});
+
+</script>
+<script src="/static/js/navbar.js"></script>

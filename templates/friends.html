@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Friends</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #1c1c1c;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        
+        .content {
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .page-header {
+            margin-bottom: 2.5rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+        
+        .page-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #f46464, transparent);
+        }
+        
+        .page-header h1 {
+            color: #f46464;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px rgba(244, 100, 100, 0.3);
+        }
+        
+        .page-header p {
+            color: #888888;
+            font-size: 1.1rem;
+        }
+        
+        .search-container {
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+        
+        .search-bar {
+            width: 100%;
+            padding: 1.2rem 1.2rem 1.2rem 3.5rem;
+            border: 2px solid #f46464;
+            border-radius: 15px;
+            background-color: #2d2d2d;
+            color: #ffffff;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #f46464;
+            font-size: 1.2rem;
+        }
+        
+        .search-bar:focus {
+            outline: none;
+            border-color: #ff7676;
+            box-shadow: 0 0 20px rgba(244, 100, 100, 0.2);
+            transform: scale(1.01);
+        }
+        
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem 0;
+        }
+        
+        .user-card {
+            background-color: #2d2d2d;
+            border-radius: 15px;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(244, 100, 100, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .user-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f46464, #ff7676);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .user-card:hover::before {
+            opacity: 1;
+        }
+        
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f46464, #ff7676);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(244, 100, 100, 0.3);
+            border: 4px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-name {
+            color: #f46464;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .user-username {
+            color: #888888;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .add-friend-btn {
+            background: transparent;
+            border: 2px solid #f46464;
+            color: #f46464;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .add-friend-btn:hover {
+            background: #f46464;
+            color: #ffffff;
+            transform: scale(1.05);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #888888;
+            font-size: 1.2rem;
+        }
+        
+        .no-results {
+            text-align: center;
+            color: #888888;
+            padding: 3rem;
+            background-color: #2d2d2d;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            grid-column: 1 / -1;
+        }
+        
+        .no-results i {
+            font-size: 3rem;
+            color: #f46464;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 1rem;
+            }
+            .users-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            .user-avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+        }
+
+
+        
+        .user-card {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-card .add-friend-btn {
+            position: relative;
+            z-index: 2;  /* Ensure button stays above the clickable card */
+        }
+
+        .user-card-link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;  /* Place below the button but above the card */
+        }
+    </style>
+</head>
+
+<body>
+
+    {% include 'navbar.html' %}
+
+
+   
+    <div class="content">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-user-plus"></i> Find Friends</h1>
+                <p>Search and connect with other users</p>
+            </div>
+
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-bar" placeholder="Search by username or full name..." id="searchInput" autocomplete="off">
+            </div>
+
+            <div class="users-grid" id="usersGrid">
+                <!-- Users will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const usersGrid = document.getElementById('usersGrid');
+        let searchTimeout;
+        let csrfToken = '';
+    
+        // Fetch CSRF token when page loads
+        fetch('/get_csrf_token')
+            .then(response => response.json())
+            .then(data => {
+                csrfToken = data.csrf_token;
+            });
+    
+        // Get initials from full name for user avatars
+        function getInitials(name) {
+            return name.split(' ')
+                .map(word => word[0])
+                .join('')
+                .toUpperCase();
+        }
+    
+        // Render users in a grid
+        function renderUsers(users) {
+            if (users.length === 0) {
+                usersGrid.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-user-slash"></i>
+                        <p>No users found matching your search</p>
+                    </div>
+                `;
+                return;
+            }
+    
+            // Create a user card for each user
+            usersGrid.innerHTML = users.map(user => `
+                <div class="user-card">
+                    <div class="user-avatar">
+                        ${getInitials(user.full_name)}
+                    </div>
+                    <h3 class="user-name">${user.full_name}</h3>
+                    <p class="user-username">@${user.username}</p>
+                    <button class="add-friend-btn" 
+                            id="followBtn_${user.username}" 
+                            onclick="toggleFollow('${user.username}', this)">
+                        ${user.is_following ? '<i class="fas fa-user-minus"></i> Unfollow' : '<i class="fas fa-user-plus"></i> Follow'}
+                    </button>
+                </div>
+            `).join('');
+        }
+    
+        // Follow or unfollow a user
+        function toggleFollow(username, button) {
+            const isFollowing = button.innerText.trim() === 'Unfollow';
+    
+            fetch(`/${isFollowing ? 'unfollow' : 'follow'}/${username}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrfToken // Use fetched CSRF token
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    button.innerHTML = isFollowing ? '<i class="fas fa-user-plus"></i> Follow' : '<i class="fas fa-user-minus"></i> Unfollow';
+                } else {
+                    alert(data.message || 'Something went wrong.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    
+        // Show loading animation during search
+        function showLoading() {
+            usersGrid.innerHTML = `
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    Searching...
+                </div>
+            `;
+        }
+    
+        // Search users based on query
+        function searchUsers(query) {
+            showLoading();
+    
+            fetch(`/search_users?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    renderUsers(data.users);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    usersGrid.innerHTML = `
+                        <div class="no-results">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>An error occurred while searching. Please try again.</p>
+                        </div>
+                    `;
+                });
+        }
+    
+        // Handle input events and debounce the search query
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const query = e.target.value.trim();
+    
+            if (query.length === 0) {
+                usersGrid.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <p>Start typing to search for users</p>
+                    </div>
+                `;
+                return;
+            }
+    
+            // Debounce search for 300ms
+            searchTimeout = setTimeout(() => {
+                searchUsers(query);
+            }, 300);
+        });
+    
+        // Initial state before search
+        usersGrid.innerHTML = `
+            <div class="no-results">
+                <i class="fas fa-search"></i>
+                <p>Start typing to search for users</p>
+            </div>
+        `;
+    </script>
+    
+
+</body>
+
+</html>

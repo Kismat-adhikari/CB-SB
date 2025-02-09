@@ -1,0 +1,126 @@
+<h1>{{ user[2] }}'s Profile</h1>
+
+<p>Full Name: {{ user[0] }}</p>
+<p>Username: {{ user[1] }}</p>
+<p>Cook Type: {{ user[3] }}</p>
+<p>Age: {{ user[4] }}</p>
+<p>Phone: {{ user[5] }}</p>
+<p>Email: {{ user[6] }}</p>
+
+<!-- Followers & Following Section -->
+<div id="follow-stats">
+    <p>Followers: <span id="followers-count">{{ followers_count }}</span></p>
+    <p>Following: <span id="following-count">{{ following_count }}</span></p>
+</div>
+
+{% if not is_own_profile %}
+    <div id="follow-buttons">
+        {% if is_following %}
+            <button onclick="unfollowUser('{{ user[1] }}')" class="unfollow-btn">Unfollow</button>
+        {% else %}
+            <button onclick="followUser('{{ user[1] }}')" class="follow-btn">Follow</button>
+        {% endif %}
+    </div>
+
+    <form method="GET" action="{{ url_for('message_user', username=user[1]) }}">
+        <button type="submit">Message</button>
+    </form>
+{% endif %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const socket = io();
+        const currentUsername = "{{ session['username'] }}";
+        const profileUsername = "{{ user[1] }}";
+
+        // Connect to Socket.IO and handle connection
+        socket.on('connect', () => {
+            console.log('Connected to Socket.IO');
+        });
+
+        // Listen for follow/unfollow events
+        socket.on('follow_update', function(data) {
+            console.log('Received follow update:', data);
+            
+            // Update counts if this profile is involved
+            if (data.following === profileUsername) {
+                document.getElementById('followers-count').textContent = data.followers_count;
+                document.getElementById('following-count').textContent = data.following_count;
+                
+                // Update button if we're the follower
+                if (data.follower === currentUsername) {
+                    const followButtons = document.getElementById('follow-buttons');
+                    if (followButtons) {
+                        if (data.action === 'follow') {
+                            followButtons.innerHTML = `
+                                <button onclick="unfollowUser('${profileUsername}')" class="unfollow-btn">Unfollow</button>
+                            `;
+                        } else {
+                            followButtons.innerHTML = `
+                                <button onclick="followUser('${profileUsername}')" class="follow-btn">Follow</button>
+                            `;
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+    // Define these functions in global scope
+    function followUser(username) {
+        fetch(`/follow/${username}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Follow successful:', data);
+            } else {
+                console.error('Follow failed:', data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function unfollowUser(username) {
+        fetch(`/unfollow/${username}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Unfollow successful:', data);
+            } else {
+                console.error('Unfollow failed:', data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+
+<style>
+    .follow-btn, .unfollow-btn {
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        border: none;
+        margin: 5px;
+    }
+
+    .follow-btn {
+        background-color: #1da1f2;
+        color: white;
+    }
+
+    .unfollow-btn {
+        background-color: #e0245e;
+        color: white;
+    }
+</style>

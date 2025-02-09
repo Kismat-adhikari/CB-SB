@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-header">
+        <h1>Create Account</h1>
+        <p class="auth-subtitle">Join our cooking community today</p>
+    </div>
+    
+    <form method="POST" action="{{ url_for('signup') }}" class="auth-form" id="signupForm">
+        <div class="form-group">
+            <label for="full_name">Full Name</label>
+            <input type="text" id="full_name" name="full_name" required 
+                   placeholder="Enter your full name">
+        </div>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required 
+                   placeholder="Choose a username" oninput="syncUsername(this.value)">
+            <input type="hidden" id="display_name" name="display_name">
+        </div>
+        <div class="form-group">
+            <label for="cook_type">Type of Cook</label>
+            <select id="cook_type" name="cook_type" required>
+                <option value="" disabled selected>Select your specialty</option>
+                <option value="vegetarian">Vegetarian</option>
+                <option value="dessert">Dessert</option>
+                <option value="baking">Baking</option>
+                <option value="grilling">Grilling</option>
+                <option value="international">International</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <div class="form-group half">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" required min="13" 
+                       placeholder="Your age">
+            </div>
+            <div class="form-group half">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required 
+                       placeholder="Your phone number">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required 
+                   placeholder="Enter your email">
+        </div>
+        <div class="password-section">
+            <div class="form-row">
+                <div class="form-group half">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required 
+                           placeholder="Create password">
+                </div>
+                <div class="form-group half">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required 
+                           placeholder="Confirm password">
+                </div>
+            </div>
+            <div class="password-requirements">
+                <h3>Password Requirements:</h3>
+                <ul>
+                    <li id="length-check">At least 8 characters long</li>
+                    <li id="uppercase-check">Contains uppercase letter</li>
+                    <li id="lowercase-check">Contains lowercase letter</li>
+                    <li id="number-check">Contains number</li>
+                    <li id="special-check">Contains special character</li>
+                    <li id="match-check">Passwords match</li>
+                </ul>
+            </div>
+        </div>
+        <button type="submit" class="btn-primary" id="submitBtn" disabled>Create Account</button>
+    </form>
+    <p class="auth-link">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+</div>
+{% endblock %}

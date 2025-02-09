@@ -1,0 +1,2 @@
+Kismat Adhikari,kuru,kuru,grilling,13,9818939397,kismatalt02@gmail.com,pbkdf2:sha256:260000$nDfyBAkpMHBzM0pJ$56e389663af05eddc3c4d68911639ab31b25a40604f197bc1efa74cf77b44ab4
+jayanti Bhatta,Jayeon,Jayeon,grilling,19,9818939397,kismatadhikari62@gmail.com,pbkdf2:sha256:260000$aCohY7rsk9d54tlX$3f2c9e3442a7804e6104cddfd5fc47946851ea4f2b15e14feb1ae75d774d9a2f

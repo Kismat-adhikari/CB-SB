@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notifications</title>
+    <style>
+        .notification-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 5px;
+        }
+        .notification-message {
+            margin: 0;
+        }
+        .notification-time {
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="notifications-container">
+        <h2>Notifications</h2>
+        
+        {% if notifications %}
+            {% for notification in notifications %}
+                <div class="notification-item">
+                    <p class="notification-message">{{ notification.message }}</p>
+                    {% if notification.timestamp %}
+                        <span class="notification-time">{{ notification.timestamp }}</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No notifications yet</p>
+        {% endif %}
+    </div>
+</body>
+</html>
